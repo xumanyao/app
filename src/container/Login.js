@@ -1,24 +1,48 @@
 import React from 'react';
-import {List, InputItem, WingBlank, Button, WhiteSpace} from 'antd-mobile'
-import Logo from '../component/Logo'
-export default class Login extends React.Component{
+import {List, InputItem, WingBlank, Button, WhiteSpace} from 'antd-mobile';
+import { connect } from 'react-redux';
+import { login } from '../redux/user-regist';
+import Logo from '../component/Logo';
+import {Redirect} from "react-router-dom";
+
+@connect(
+    state=>state.user,
+    {login}
+)
+class Login extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            userName:'',
+            password:''
+        }
+    }
     goRegiter = () =>{
         this.props.history.push('/regist')
-    }
+    };
+    login = () =>{
+        this.props.login(this.state);
+    };
+    change=(key,value)=>{
+        this.setState({
+            [key]: value
+        })
+    };
     render(){
         return(
             <div>
                 <Logo/>
-                <h1>登录页</h1>
+                {this.props.msg?<p>{this.props.msg}</p>:null}
+                {this.props.redirectTo?<Redirect to={this.props.redirectTo}/>:null}
                 <WingBlank>
                     <List>
                         <WhiteSpace/>
-                        <InputItem>用户名</InputItem>
+                        <InputItem onChange={(v)=>this.change('userName',v)}>用户名</InputItem>
                         <WhiteSpace/>
-                        <InputItem>密码</InputItem>
+                        <InputItem onChange={(v)=>this.change('password',v)} type='password'>密码</InputItem>
                     </List>
                     <WhiteSpace/>
-                    <Button type="primary">登陆</Button>
+                    <Button type="primary" onClick={this.login}>登陆</Button>
                     <WhiteSpace/>
                     <Button type="primary" onClick={this.goRegiter}>注册</Button>
                 </WingBlank>
@@ -26,3 +50,4 @@ export default class Login extends React.Component{
         )
     }
 }
+export default Login;

@@ -3,12 +3,15 @@ import Logo from '../component/Logo';
 import { connect } from 'react-redux';
 import { regist } from '../redux/user-regist'
 import {List, InputItem, WingBlank, Button, WhiteSpace,  Radio} from 'antd-mobile';
+import {Redirect} from  'react-router-dom';
+
 const RadioItem = Radio.RadioItem;
 @connect(state=>state.user,{regist})
 class Register extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            redirectTo:'',
             userName:'',
             password:'',
             rePassword:'',
@@ -16,18 +19,20 @@ class Register extends React.Component{
         }
     }
     change=(key,value)=>{
-        console.log(`${key}has been chageed`);
         this.setState({
             [key]: value
         })
     };
     regiter=()=>{
-        console.log('regist');
         this.props.regist(this.state);
+        /*axios.get('/user/info').then((req,res)=>{
+            console.log(res);
+        })*/
     };
     render(){
         return(
             <div>
+                {this.props.redirectTo?<Redirect to={this.props.redirectTo}/>:null}
                 <Logo/>
                 <WingBlank>
                     <List>
@@ -37,7 +42,7 @@ class Register extends React.Component{
                         <WhiteSpace/>
                         <InputItem onChange={(v)=>this.change('password',v)} type='password'>密码</InputItem>
                         <WhiteSpace/>
-                        <InputItem onChange={(v)=>this.change('reRassword',v)} type='password'>确认密码</InputItem>
+                        <InputItem onChange={(v)=>this.change('rePassword',v)} type='password'>确认密码</InputItem>
                     </List>
                     <WhiteSpace/>
                     <RadioItem
